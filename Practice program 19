@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+int main() {
+    int n, sum = 0;
+    scanf("%d", &n);   // size of array (n-1 elements should be entered)
+    int arr[n-1];
+    
+    for (int i = 0; i < n-1; i++) {
+        scanf("%d", &arr[i]);
+        sum += arr[i];
+    }
+
+    int total = n * (n + 1) / 2;   // sum of 1..n
+    printf("Missing element = %d\n", total - sum);
+
+    return 0;
+}
