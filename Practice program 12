@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+int stack[MAX], top = -1;
+
+int isEmpty() { return top == -1; }
+int isFull() { return top == MAX - 1; }
+
+void push(int x) {
+    if (isFull()) { printf("Stack Overflow\n"); return; }
+    stack[++top] = x;
+}
+
+int pop() {
+    if (isEmpty()) { printf("Stack Underflow\n"); return -1; }
+    return stack[top--];
+}
+
+int peek() {
+    if (isEmpty()) { printf("Stack is empty\n"); return -1; }
+    return stack[top];
+}
+
+int main() {
+    push(10);
+    push(20);
+    push(30);
+    printf("Top element: %d\n", peek());
+    printf("Popped: %d\n", pop());
+    printf("Popped: %d\n", pop());
+    printf("Popped: %d\n", pop());
+    printf("Popped: %d\n", pop()); // underflow test
+    return 0;
+}
