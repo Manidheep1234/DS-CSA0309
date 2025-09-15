@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {int key, height; struct Node *l,*r;};
+
+int h(struct Node* n){return n?n->height:0;}
+int max(int a,int b){return a>b?a:b;}
+
+struct Node* newNode(int k){struct Node* n=malloc(sizeof(struct Node)); n->key=k; n->l=n->r=NULL; n->height=1; return n;}
+
+struct Node* rR(struct Node* y){struct Node* x=y->l; y->l=x->r; x->r=y; y->height=max(h(y->l),h(y->r))+1; x->height=max(h(x->l),h(x->r))+1; return x;}
+struct Node* lR(struct Node* x){struct Node* y=x->r; x->r=y->l; y->l=x; x->height=max(h(x->l),h(x->r))+1; y->height=max(h(y->l),h(y->r))+1; return y;}
+
+int bf(struct Node* n){return n?n->l?h(n->l):0 - h(n->r):0;}
+
+struct Node* insert(struct Node* node,int k){
+    if(!node) return newNode(k);
+    if(k<node->key) node->l=insert(node->l,k);
+    else if(k>node->key) node->r=insert(node->r,k);
+    node->height=max(h(node->l),h(node->r))+1;
+    int b=bf(node);
+    if(b>1 && k<node->l->key) return rR(node);
+    if(b<-1 && k>node->r->key) return lR(node);
+    if(b>1 && k>node->l->key){ node->l=lR(node->l); return rR(node);}
+    if(b<-1 && k<node->r->key){ node->r=rR(node->r); return lR(node);}
+    return node;
+}
+
+struct Node* minV(struct Node* n){while(n->l)n=n->l; return n;}
+
+struct Node* delete(struct Node* root,int k){
+    if(!root) return root;
+    if(k<root->key) root->l=delete(root->l,k);
+    else if(k>root->key) root->r=delete(root->r,k);
+    else{
+        if(!root->l||!root->r){struct Node* t=root->l?root->l:root->r; if(!t){t=root; root=NULL;} else *root=*t; free(t);}
+        else{struct Node* t=minV(root->r); root->key=t->key; root->r=delete(root->r,t->key);}
+    }
+    if(!root) return root;
+    root->height=max(h(root->l),h(root->r))+1;
+    int b=bf(root);
+    if(b>1 && bf(root->l)>=0) return rR(root);
+    if(b>1 && bf(root->l)<0){ root->l=lR(root->l); return rR(root);}
+    if(b<-1 && bf(root->r)<=0) return lR(root);
+    if(b<-1 && bf(root->r)>0){ root->r=rR(root->r); return lR(root);}
+    return root;
+}
+
+struct Node* search(struct Node* root,int k){if(!root||root->key==k) return root; return k<root->key?search(root->l,k):search(root->r,k);}
+
+void pre(struct Node* root){if(root){printf("%d ",root->key); pre(root->l); pre(root->r);}}
+
+int main(){
+    struct Node* root=NULL;
+    root=insert(root,10); root=insert(root,20); root=insert(root,30);
+    root=insert(root,40); root=insert(root,50); root=insert(root,25);
+    printf("Preorder: "); pre(root);
+    root=delete(root,40);
+    printf("\nAfter deletion: "); pre(root);
+    int key=25; struct Node* f=search(root,key);
+    printf("\nElement %d %sfound\n",key,f?"":"not ");
+    return 0;
+}
