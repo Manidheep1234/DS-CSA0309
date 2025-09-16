@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+// Create new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->prev = newNode->next = NULL;
+    return newNode;
+}
+
+// Insert at beginning
+struct Node* insertBeginning(struct Node* head, int data) {
+    struct Node* newNode = createNode(data);
+    if (head != NULL) head->prev = newNode;
+    newNode->next = head;
+    return newNode;
+}
+
+// Insert at end
+struct Node* insertEnd(struct Node* head, int data) {
+    struct Node* newNode = createNode(data);
+    if (head == NULL) return newNode;
+    struct Node* temp = head;
+    while (temp->next != NULL) temp = temp->next;
+    temp->next = newNode;
+    newNode->prev = temp;
+    return head;
+}
+
+// Insert at specific position (1-based)
+struct Node* insertPosition(struct Node* head, int data, int pos) {
+    if (pos == 1) return insertBeginning(head, data);
+    struct Node* newNode = createNode(data);
+    struct Node* temp = head;
+    for (int i = 1; i < pos - 1 && temp != NULL; i++) temp = temp->next;
+    if (temp == NULL) {
+        printf("Position out of range\n");
+        free(newNode);
+        return head;
+    }
+    newNode->next = temp->next;
+    newNode->prev = temp;
+    if (temp->next != NULL) temp->next->prev = newNode;
+    temp->next = newNode;
+    return head;
+}
+
+// Print list forward
+void printForward(struct Node* head) {
+    struct Node* temp = head;
+    printf("Forward: ");
+    while (temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Print list backward
+void printBackward(struct Node* head) {
+    if (head == NULL) return;
+    struct Node* temp = head;
+    while (temp->next != NULL) temp = temp->next; // go to last node
+    printf("Backward: ");
+    while (temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->prev;
+    }
+    printf("NULL\n");
+}
+
+// Main
+int main() {
+    struct Node* head = NULL;
+
+    head = insertEnd(head, 10);
+    head = insertEnd(head, 20);
+    head = insertEnd(head, 30);
+
+    printForward(head);
+    printBackward(head);
+
+    head = insertBeginning(head, 5);
+    printForward(head);
+    printBackward(head);
+
+    head = insertPosition(head, 25, 4);
+    printForward(head);
+    printBackward(head);
+
+    return 0;
+}
