@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[100];
+    int n, i, j, found = 0;
+
+    printf("Enter a string: ");
+    gets(str);
+
+    n = strlen(str);
+
+    printf("Repeated characters and their indices:\n");
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (str[i] == str[j]) {
+                printf("Character '%c' found at indices %d and %d\n", str[i], i, j);
+                found = 1;
+            }
+        }
+    }
+
+    if (!found) {
+        printf("No repeated characters found.\n");
+    }
+
+    return 0;
+}
