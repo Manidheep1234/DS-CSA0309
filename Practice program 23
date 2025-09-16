@@ -1,0 +1,59 @@
+#include <stdio.h>
+
+#define MAX 20
+
+int graph[MAX][MAX], visited[MAX], path[MAX], n;
+int found = 0;
+
+void dfs(int start, int end, int index) {
+    visited[start] = 1;
+    path[index] = start;
+
+    if (start == end) {
+        found = 1;
+        printf("Valid Path: ");
+        for (int i = 0; i <= index; i++) {
+            printf("%d ", path[i]);
+        }
+        printf("\n");
+        return;
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (graph[start][i] == 1 && !visited[i]) {
+            dfs(i, end, index + 1);
+            if (found) return;  // stop after finding first valid path
+        }
+    }
+
+    visited[start] = 0; // backtrack
+}
+
+int main() {
+    int start, end;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter adjacency matrix:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    printf("Enter start vertex: ");
+    scanf("%d", &start);
+    printf("Enter end vertex: ");
+    scanf("%d", &end);
+
+    for (int i = 0; i < n; i++) visited[i] = 0;
+
+    dfs(start, end, 0);
+
+    if (!found) {
+        printf("No valid path exists between %d and %d\n", start, end);
+    }
+
+    return 0;
+}
