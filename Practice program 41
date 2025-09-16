@@ -1,0 +1,43 @@
+#include <stdio.h>
+
+#define SIZE 50
+
+int main() {
+    int stack1[SIZE], stack2[SIZE];
+    int n1, n2;
+
+    // Input first stack
+    printf("Enter number of elements in stack 1: ");
+    scanf("%d", &n1);
+    printf("Enter elements of stack 1 (bottom to top):\n");
+    for (int i = 0; i < n1; i++) {
+        scanf("%d", &stack1[i]);
+    }
+
+    // Input second stack
+    printf("Enter number of elements in stack 2: ");
+    scanf("%d", &n2);
+    printf("Enter elements of stack 2 (bottom to top):\n");
+    for (int i = 0; i < n2; i++) {
+        scanf("%d", &stack2[i]);
+    }
+
+    // Calculate sum for stack 1
+    if (n1 > 0) {
+        int sum1 = stack1[0] + stack1[n1 - 1]; // bottom + top
+        printf("Stack 1: bottom + top = %d + %d = %d\n", stack1[0], stack1[n1 - 1], sum1);
+    } else {
+        printf("Stack 1 is empty.\n");
+    }
+
+    // Calculate sum for stack 2
+    if (n2 > 0) {
+        int sum2 = stack2[0] + stack2[n2 - 1]; // bottom + top
+        printf("Stack 2: bottom + top = %d + %d = %d\n", stack2[0], stack2[n2 - 1], sum2);
+    } else {
+        printf("Stack 2 is empty.\n");
+    }
+
+    return 0;
+}
+
