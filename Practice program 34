@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define SIZE 100
+
+// Queue structure
+struct Queue {
+    int arr[SIZE];
+    int front, rear;
+};
+
+// Initialize queue
+void init(struct Queue* q) {
+    q->front = q->rear = -1;
+}
+
+// Check if empty
+int isEmpty(struct Queue* q) {
+    return q->front == -1;
+}
+
+// Enqueue
+void enqueue(struct Queue* q, int x) {
+    if (q->rear == SIZE - 1) {
+        printf("Queue Overflow\n");
+        return;
+    }
+    if (q->front == -1) q->front = 0;
+    q->arr[++q->rear] = x;
+}
+
+// Dequeue
+int dequeue(struct Queue* q) {
+    if (isEmpty(q)) {
+        printf("Queue Underflow\n");
+        return -1;
+    }
+    int item = q->arr[q->front];
+    if (q->front == q->rear)
+        q->front = q->rear = -1;
+    else
+        q->front++;
+    return item;
+}
+
+// Stack using two queues
+struct Stack {
+    struct Queue q1, q2;
+};
+
+// Initialize stack
+void initStack(struct Stack* s) {
+    init(&s->q1);
+    init(&s->q2);
+}
+
+// Push operation
+void push(struct Stack* s, int x) {
+    enqueue(&s->q1, x);
+    printf("%d pushed to stack\n", x);
+}
+
+// Pop operation
+int pop(struct Stack* s) {
+    if (isEmpty(&s->q1)) {
+        printf("Stack Underflow\n");
+        return -1;
+    }
+
+    // Move elements except last to q2
+    while (s->q1.front != s->q1.rear) {
+        int item = dequeue(&s->q1);
+        enqueue(&s->q2, item);
+    }
+
+    // Last element is stack top
+    int popped = dequeue(&s->q1);
+
+    // Swap q1 and q2
+    struct Queue temp = s->q1;
+    s->q1 = s->q2;
+    s->q2 = temp;
+
+    return popped;
+}
+
+// Main
+int main() {
+    struct Stack s;
+    initStack(&s);
+
+    push(&s, 10);
+    push(&s, 20);
+    push(&s, 30);
+
+    printf("Popped: %d\n", pop(&s));
+    printf("Popped: %d\n", pop(&s));
+
+    push(&s, 40);
+    printf("Popped: %d\n", pop(&s));
+
+    return 0;
+}
