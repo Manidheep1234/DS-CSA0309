@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert node at end
+struct Node* insertEnd(struct Node* head, int data) {
+    struct Node* newNode = createNode(data);
+    if (head == NULL) return newNode;
+    struct Node* temp = head;
+    while (temp->next != NULL) temp = temp->next;
+    temp->next = newNode;
+    return head;
+}
+
+// Function to check palindrome
+int isPalindrome(struct Node* head) {
+    int arr[100], i = 0, j;
+    struct Node* temp = head;
+
+    // Store list elements in array
+    while (temp != NULL) {
+        arr[i++] = temp->data;
+        temp = temp->next;
+    }
+
+    // Compare front and back
+    for (j = 0; j < i / 2; j++) {
+        if (arr[j] != arr[i - j - 1]) {
+            return 0; // Not palindrome
+        }
+    }
+    return 1; // Palindrome
+}
+
+int main() {
+    struct Node* head = NULL;
+    int n, val;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter data for node %d: ", i + 1);
+        scanf("%d", &val);
+        head = insertEnd(head, val);
+    }
+
+    if (isPalindrome(head))
+        printf("The linked list is a Palindrome.\n");
+    else
+        printf("The linked list is NOT a Palindrome.\n");
+
+    return 0;
+}
