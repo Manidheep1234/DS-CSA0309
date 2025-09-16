@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+int main() {
+    int arr[50], freq[50];
+    int n, i, j, count;
+
+    printf("Enter size of array: ");
+    scanf("%d", &n);
+
+    printf("Enter elements:\n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+        freq[i] = -1; // Initialize frequency
+    }
+
+    // Count frequency
+    for (i = 0; i < n; i++) {
+        count = 1;
+        if (freq[i] != 0) {
+            for (j = i + 1; j < n; j++) {
+                if (arr[i] == arr[j]) {
+                    count++;
+                    freq[j] = 0; // Mark visited
+                }
+            }
+            freq[i] = count;
+        }
+    }
+
+    // Print elements repeated exactly twice
+    printf("Elements repeated exactly twice:\n");
+    int found = 0;
+    for (i = 0; i < n; i++) {
+        if (freq[i] == 2) {
+            printf("%d ", arr[i]);
+            found = 1;
+        }
+    }
+    if (!found) printf("None");
+
+    return 0;
+}
