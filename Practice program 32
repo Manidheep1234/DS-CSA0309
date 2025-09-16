@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure of BST node
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Insert into BST
+struct Node* insert(struct Node* root, int data) {
+    if (root == NULL) return createNode(data);
+    if (data < root->data)
+        root->left = insert(root->left, data);
+    else if (data > root->data)
+        root->right = insert(root->right, data);
+    return root;
+}
+
+// Utility function to find k-th minimum using inorder traversal
+void kthMinUtil(struct Node* root, int k, int* count, int* result) {
+    if (root == NULL || *count >= k) return;
+
+    // Left subtree
+    kthMinUtil(root->left, k, count, result);
+
+    // Visit node
+    (*count)++;
+    if (*count == k) {
+        *result = root->data;
+        return;
+    }
+
+    // Right subtree
+    kthMinUtil(root->right, k, count, result);
+}
+
+// Wrapper function
+int kthMin(struct Node* root, int k) {
+    int count = 0, result = -1;
+    kthMinUtil(root, k, &count, &result);
+    return result;
+}
+
+int main() {
+    struct Node* root = NULL;
+    int n, val, k;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    printf("Enter elements:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        root = insert(root, val);
+    }
+
+    printf("Enter k (for k-th minimum): ");
+    scanf("%d", &k);
+
+    int ans = kthMin(root, k);
+    if (ans == -1)
+        printf("k is larger than the number of nodes.\n");
+    else
+        printf("The %d-th minimum value is: %d\n", k, ans);
+
+    return 0;
+}
